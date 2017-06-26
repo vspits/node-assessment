@@ -43,9 +43,9 @@
 
 ### Endpoints
 
-    **Reminder:** You *must* use port **3000** for this assessment.
+**Reminder:** You *must* use port **3000** for this assessment.
 
-    Write your endpoints in ```server.js```.
+Write your endpoints in ```server.js```.
 
 1. **```'GET' /api/users```**
 
@@ -53,10 +53,11 @@
 
     This endpoint can be called with one of these queries, which you should be prepared to address:
 
-    - favorites: Return all users who have this favorite in their *array* of favorites.
+    
     - age: Return all users who have an age *less* than this age.
     - lastname: Return all users whose last name matches.
     - email: Return just the user object of the user whose email matches.
+    - favorites: Return all users who have this favorite in their *array* of favorites.
 
       * Example request URL: ```localhost:3000/api/users?favorites=angular```
 
