@@ -56,7 +56,7 @@ Write your endpoints in ```server.js```.
     
     - age: Return all users who have an age *less* than this age.
     - lastname: Return all users whose last name matches.
-    - email: Return just the user object of the user whose email matches.
+    - email: Return all users whose email matches.
     - favorites: Return all users who have this favorite in their *array* of favorites.
 
       * Example request URL: ```localhost:3000/api/users?favorites=angular```
