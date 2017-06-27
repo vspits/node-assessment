@@ -331,17 +331,28 @@
 		{
 			"id": "e56d16e2-2d22-dd4d-6011-3110ca2e2bfc",
 			"headers": "",
+			"headerData": [],
 			"url": "localhost:3000/api/users?email=mrodriguez1k@cornell.edu",
+			"queryParams": [
+				{
+					"key": "email",
+					"value": "mrodriguez1k@cornell.edu",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
 			"preRequestScript": null,
 			"pathVariables": {},
+			"pathVariableData": [],
 			"method": "GET",
 			"data": null,
 			"dataMode": "params",
 			"version": 2,
-			"tests": "const users = JSON.parse(postman.getGlobalVariable('users'));\nconst res = JSON.parse(responseBody);\n\nlet sameLastName = users.filter(user=>user.email === 'mrodriguez1k@cornell.edu');\n\nlet flag = true;\nfor (let key in sameLastName[0]){\n    if (key === 'favorites') break;\n    if (sameLastName[0][key] !== res[key]) {\n        flag = false\n    }\n}\n\ntests[\"Status code is 200\"] = responseCode.code === 200;\ntests['Correct user objects returned'] = res.length === sameLastName[0].length && flag;",
+			"tests": "const users = JSON.parse(postman.getGlobalVariable('users'));\nconst res = JSON.parse(responseBody);\n\nlet sameLastName = users.filter(user=>user.email === 'mrodriguez1k@cornell.edu');\n\nlet flag = true;\nfor (let key in sameLastName[0]){\n    if (key === 'favorites') break;\n    if (sameLastName[0][key] !== res[0][key]) flag = false;\n}\n\ntests[\"Status code is 200\"] = responseCode.code === 200;\ntests['Correct user object returned'] = flag;",
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1494310966073,
+			"time": 1498531240065,
 			"name": "Get All Users ( email ) - #1",
 			"description": "",
 			"collectionId": "0746620b-7f5e-b659-0015-2dcafca9042b",
