@@ -1923,60 +1923,6 @@
 			"response": []
 		},
 		{
-			"name": "Get All Users ( lastname ) - #1",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "4b6af4df-2534-4de2-9c1e-ecd9b0ac642a",
-						"exec": [
-							"const users = JSON.parse(postman.getGlobalVariable('users'));",
-							"const res = JSON.parse(responseBody);",
-							"",
-							"let sameLastName = users.filter(user=>user.last_name === 'Brown');",
-							"",
-							"let flag = true;",
-							"for (let i = 0; i < sameLastName.length; i++) {",
-							"    if (sameLastName[i].id !== res[i].id) {",
-							"        flag = false;",
-							"    }",
-							"}",
-							"",
-							"tests[\"Status code is 200\"] = responseCode.code === 200;",
-							"tests['Correct user objects returned'] = res.length === sameLastName.length && flag;"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
-				"url": {
-					"raw": "localhost:3000/api/user?lastname=Brown",
-					"host": [
-						"localhost"
-					],
-					"port": "3000",
-					"path": [
-						"api",
-						"user"
-					],
-					"query": [
-						{
-							"key": "lastname",
-							"value": "Brown"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "Get All Users ( email ) - #1",
 			"event": [
 				{
