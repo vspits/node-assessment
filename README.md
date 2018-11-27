@@ -47,7 +47,7 @@
 
 Write your endpoints in ```server.js```.
 
-1. **```'GET' /api/users```**
+1. **```'GET' /api/user```**
 
     Respond with the entire users array, with status 200.
 
@@ -55,40 +55,37 @@ Write your endpoints in ```server.js```.
 
     
     - age: Return all users who have an age *less* than this age.
-    - lastname: Return all users whose last name matches.
     - email: Return all users whose email matches.
     - favorites: Return all users who have this favorite in their *array* of favorites.
 
-      * Example request URL: ```localhost:3000/api/users?favorites=angular```
+      * Example request URL: ```localhost:3000/api/user?favorites=angular```
 
-2. **```'GET' /api/users/``` + userId**
+2. **```'GET' /api/user/``` + userId**
 
     The tests will send a GET request with the userId as a parameter to this endpoint. Remember, request params will come as strings. If the user is found, respond with status 200 and send that user's object.
 
-    If no user was found, respond with a status of ```404``` and ```null```.
-
-    **NOTE:** You will need to use ```.json()``` instead of ```.send()``` when sending just ```null```.
+    If no user was found, respond with a status of ```404```.
 
 
-3. **```'GET' /api/admins```**
+3. **```'GET' /api/admin```**
 
     Respond with status 200, and an array of all users who are admins.
 
-4. **```'GET' /api/nonadmins```**
+4. **```'GET' /api/nonadmin```**
 
     Respond with status 200, and an array of all non-admin users.
 
-5. **```'GET' /api/user_type/``` + userType**
+5. **```'GET' /api/type/``` + userType**
 
     Respond with status 200, and an array of all users that match the ```userType``` parameter.
 
-6. **```'PUT' /api/users/``` + userId**
+6. **```'PUT' /api/user/``` + userId**
 
     A user's information will be sent in the request body. It will contain the same type of user information container in the other user objects. You should update the user object that has an ID matching the ```userId``` parameter.
 
     Return with status 200, and the entire array of user objects *after* you have updated the correct user object.
 
-7. **```'POST' /api/users```**
+7. **```'POST' /api/user```**
 
     A user's information will be sent in the request body. It will contain the same type of user information contained in the other user objects, except for the ID. *You will need to add an ID to this user object before adding it to the users array.*
 
@@ -96,7 +93,7 @@ Write your endpoints in ```server.js```.
 
     You should return status 200 along with the entire array of user objects *after* the new user object has been added.
 
-8. **```'DELETE' /api/users/``` + userId**
+8. **```'DELETE' /api/user/``` + userId**
 
     You should remove the user with an ID matching the ```userId``` parameter. Return status 200 and the array of user objects *after* the correct user object has been removed from the array.
 
