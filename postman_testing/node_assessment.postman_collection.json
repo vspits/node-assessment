@@ -613,7 +613,7 @@
 							"",
 							"const possibleIDs = allUsers.map(user => user.id);",
 							"",
-							"const randomIndex = Math.floor(Math.random() * possibleIDs.length - 1)",
+							"const randomIndex = Math.floor(Math.random() * possibleIDs.length - 10)",
 							"",
 							"const randomId = possibleIDs[randomIndex]",
 							"",
@@ -653,7 +653,9 @@
 						"exec": [
 							"pm.test(\"Status code is 404\", function () {",
 							"    pm.response.to.have.status(404);",
-							"});"
+							"});",
+							"",
+							"pm.globals.set('users', responseBody);"
 						],
 						"type": "text/javascript"
 					}
