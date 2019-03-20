@@ -693,6 +693,75 @@
 			"response": []
 		},
 		{
+			"name": "Confirms User Was deleted By id, not Index - #8",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "07c48e71-5d0d-4ea5-9177-c58ddc0f40ac",
+						"exec": [
+							"const res = JSON.parse(responseBody);",
+							"",
+							"const deletedId = pm.globals.get('randomId')",
+							"console.log(deletedId)",
+							"const users = JSON.parse(pm.globals.get('users'));",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('User deleted is not in the response', () => {",
+							"  let index = res.findIndex(item => item.id === deletedId)",
+							"  pm.expect(index).to.eql(-1)",
+							"})",
+							"",
+							"pm.test('Length of returned array is one smaller', () => {",
+							"    pm.expect(res.length).to.eql(users.length - 1)",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "551097c2-766b-4127-9962-dda79100d56e",
+						"exec": [
+							"const allUsers = JSON.parse(pm.globals.get('users'));",
+							"",
+							"const possibleIDs = allUsers.map(user => user.id);",
+							"",
+							"const randomIndex = Math.floor(Math.random() * possibleIDs.length - 1)",
+							"",
+							"const randomId = possibleIDs[randomIndex]",
+							"",
+							"pm.globals.set('randomId', randomId)"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:3000/api/user/{{randomId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"user",
+						"{{randomId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Still gets correct user after delete - #8",
 			"event": [
 				{
