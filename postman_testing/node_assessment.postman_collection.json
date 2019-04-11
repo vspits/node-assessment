@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "58c18e45-2c57-45c2-b6ec-2147a4fd2cc1",
+		"_postman_id": "816814d4-e174-4306-afde-83367020612b",
 		"name": "node_assessment",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -29,7 +29,8 @@
 							"",
 							"pm.globals.set(\"emailData\", JSON.stringify(emailData));",
 							"pm.globals.set(\"ageData\", JSON.stringify(ageData));",
-							"pm.globals.set(\"favoritesData\", JSON.stringify(favoritesData));"
+							"pm.globals.set(\"favoritesData\", JSON.stringify(favoritesData));",
+							"pm.globals.set(\"nextExpectedID\", res[res.length - 1].id + 1);"
 						],
 						"type": "text/javascript"
 					}
@@ -583,10 +584,11 @@
 						"id": "07c48e71-5d0d-4ea5-9177-c58ddc0f40ac",
 						"exec": [
 							"const res = JSON.parse(responseBody);",
-							"",
-							"const deletedId = pm.globals.get('randomId')",
-							"console.log(deletedId)",
 							"const users = JSON.parse(pm.globals.get('users'));",
+							"const deletedId = pm.globals.get('randomId')",
+							"",
+							"console.log('original', users.length)",
+							"",
 							"",
 							"pm.test(\"Status code is 200\", function () {",
 							"    pm.response.to.have.status(200);",
@@ -596,10 +598,21 @@
 							"  let index = res.findIndex(item => item.id === deletedId)",
 							"  pm.expect(index).to.eql(-1)",
 							"})",
-							"",
+							"console.log('res', res.length)",
+							"console.log('user', users.length)",
 							"pm.test('Length of returned array is one smaller', () => {",
 							"    pm.expect(res.length).to.eql(users.length - 1)",
-							"})"
+							"})",
+							"",
+							"console.log('beofre set', users.length)",
+							"",
+							"let x = responseBody",
+							"pm.globals.set('users', x);",
+							"const test = JSON.parse(pm.globals.get('users'));",
+							"",
+							"console.log('was it set?', test.length)",
+							"",
+							"console.log('------------------------------------------------')"
 						],
 						"type": "text/javascript"
 					}
@@ -613,8 +626,7 @@
 							"",
 							"const possibleIDs = allUsers.map(user => user.id);",
 							"",
-							"const randomIndex = Math.floor(Math.random() * possibleIDs.length - 10)",
-							"",
+							"const randomIndex = Math.floor(Math.random() * 10)",
 							"const randomId = possibleIDs[randomIndex]",
 							"",
 							"pm.globals.set('randomId', randomId)"
@@ -626,7 +638,10 @@
 			"request": {
 				"method": "DELETE",
 				"header": [],
-				"body": {},
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
 				"url": {
 					"raw": "http://localhost:3000/api/user/{{randomId}}",
 					"protocol": "http",
@@ -655,7 +670,7 @@
 							"    pm.response.to.have.status(404);",
 							"});",
 							"",
-							"pm.globals.set('users', responseBody);"
+							""
 						],
 						"type": "text/javascript"
 					}
@@ -704,8 +719,7 @@
 						"exec": [
 							"const res = JSON.parse(responseBody);",
 							"",
-							"const deletedId = pm.globals.get('randomId')",
-							"console.log(deletedId)",
+							"const lastId = pm.globals.get('lastId')",
 							"const users = JSON.parse(pm.globals.get('users'));",
 							"",
 							"pm.test(\"Status code is 200\", function () {",
@@ -713,7 +727,7 @@
 							"});",
 							"",
 							"pm.test('User deleted is not in the response', () => {",
-							"  let index = res.findIndex(item => item.id === deletedId)",
+							"  let index = res.findIndex(item => item.id === lastId)",
 							"  pm.expect(index).to.eql(-1)",
 							"})",
 							"",
@@ -733,11 +747,9 @@
 							"",
 							"const possibleIDs = allUsers.map(user => user.id);",
 							"",
-							"const randomIndex = Math.floor(Math.random() * possibleIDs.length - 1)",
+							"const lastId = possibleIDs[possibleIDs.length - 1]",
 							"",
-							"const randomId = possibleIDs[randomIndex]",
-							"",
-							"pm.globals.set('randomId', randomId)"
+							"pm.globals.set('lastId', lastId)"
 						],
 						"type": "text/javascript"
 					}
@@ -746,9 +758,12 @@
 			"request": {
 				"method": "DELETE",
 				"header": [],
-				"body": {},
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
 				"url": {
-					"raw": "http://localhost:3000/api/user/{{randomId}}",
+					"raw": "http://localhost:3000/api/user/{{lastId}}",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -757,7 +772,7 @@
 					"path": [
 						"api",
 						"user",
-						"{{randomId}}"
+						"{{lastId}}"
 					]
 				}
 			},
@@ -843,7 +858,7 @@
 							"const putData = JSON.parse(pm.globals.get('putData'))",
 							"const randomId = pm.globals.get('randomId')",
 							"",
-							"const originalUser = users.find(item => item.id === randomId)",
+							"const originalUser = users.findIndex(item => item.id === randomId)",
 							"const updatedUser = res.find(item => item.id === randomId)",
 							"",
 							"",
@@ -877,7 +892,9 @@
 							"        }",
 							"    }",
 							"    pm.expect(matching).to.equal(true)",
-							"})"
+							"})",
+							"",
+							"pm.globals.set('users', responseBody)"
 						],
 						"type": "text/javascript"
 					}
@@ -940,41 +957,42 @@
 					"script": {
 						"id": "1404cbcb-ad7f-4297-83ad-f3e7aefec5b2",
 						"exec": [
-							"pm.globals.set('users', responseBody)",
+							"var _ = require('lodash')",
+							"",
 							"const res = JSON.parse(responseBody);",
 							"",
 							"const users = JSON.parse(pm.globals.get('users'))",
+							"const expectedID = JSON.parse(pm.globals.get('nextExpectedID'))",
 							"const addedUser = JSON.parse(request.data)",
-							"",
-							"const expectedNewId = 101;",
 							"",
 							"",
 							"// const addedUser",
 							"",
-							"tests[\"Status code is 200\"] = responseCode.code === 200;",
 							"",
-							"const user = res.find(user => user.id === expectedNewId);",
+							"console.log(res.length);",
+							"console.log(users.length);",
+							"const user = _.differenceBy(res, users, 'id')[0];",
+							"// const user = res.find(user => user.id === 101)",
 							"",
-							"pm.test('id is not a repeate', () => {",
-							"    remainingUser = users.filter(item => item.id === expectedNewId);",
-							"    pm.expect(remainingUser).to.have.length(1)",
-							"})",
+							"console.log(user)",
 							"",
-							"pm.test('user has the correct ID', () => {",
-							"    pm.expect(user.id).to.equal(expectedNewId)",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test('Id is based of counter, not previous id', () => {",
+							"    pm.expect(user.id).to.equal(expectedID)",
 							"})",
 							"",
 							"pm.test('the returned user has the correct info', () => {",
 							"    delete user.id;",
-							"    let matching = true;",
-							"    for(let key of res) {",
-							"        if (res[key] !== addedUser[key]) {",
-							"            matching = false;",
-							"        }",
-							"    }",
-							"    pm.expect(matching).to.equal(true)",
+							"    pm.expect(_.isEqual(user, addedUser)).to.equal(true)",
 							"})",
-							""
+							"",
+							"",
+							"pm.globals.set('nextExpectedID', expectedID + 1)",
+							"pm.globals.set('users', responseBody)"
 						],
 						"type": "text/javascript"
 					}
@@ -1024,40 +1042,42 @@
 					"script": {
 						"id": "d77ceb19-9fc0-41c1-aee7-aa3b6b6e72c9",
 						"exec": [
-							"pm.globals.set('users', responseBody)",
+							"var _ = require('lodash')",
+							"",
 							"const res = JSON.parse(responseBody);",
 							"",
 							"const users = JSON.parse(pm.globals.get('users'))",
+							"const expectedID = JSON.parse(pm.globals.get('nextExpectedID'))",
 							"const addedUser = JSON.parse(request.data)",
-							"",
-							"const expectedNewId = 102;",
 							"",
 							"",
 							"// const addedUser",
 							"",
-							"tests[\"Status code is 200\"] = responseCode.code === 200;",
 							"",
-							"const user = res.find(user => user.id === expectedNewId);",
+							"console.log(res.length);",
+							"console.log(users.length);",
+							"const user = _.differenceBy(res, users, 'id')[0];",
+							"// const user = res.find(user => user.id === 101)",
 							"",
-							"pm.test('id is not a repeate', () => {",
-							"    remainingUser = users.filter(item => item.id === expectedNewId);",
-							"    pm.expect(remainingUser).to.have.length(1)",
-							"})",
+							"console.log(user)",
 							"",
-							"pm.test('user has the correct ID', () => {",
-							"    pm.expect(user.id).to.equal(expectedNewId)",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test('Id is based of counter, not previous id', () => {",
+							"    pm.expect(user.id).to.equal(expectedID)",
 							"})",
 							"",
 							"pm.test('the returned user has the correct info', () => {",
 							"    delete user.id;",
-							"    let matching = true;",
-							"    for(let key of res) {",
-							"        if (res[key] !== addedUser[key]) {",
-							"            matching = false;",
-							"        }",
-							"    }",
-							"    pm.expect(matching).to.equal(true)",
-							"})"
+							"    pm.expect(_.isEqual(user, addedUser)).to.equal(true)",
+							"})",
+							"",
+							"",
+							"pm.globals.set('nextExpectedID', expectedID + 1)",
+							"pm.globals.set('users', responseBody)"
 						],
 						"type": "text/javascript"
 					}
@@ -1097,40 +1117,42 @@
 					"script": {
 						"id": "586e0b7b-0808-45fd-af3c-d1b144758093",
 						"exec": [
-							"pm.globals.set('users', responseBody)",
+							"var _ = require('lodash')",
+							"",
 							"const res = JSON.parse(responseBody);",
 							"",
 							"const users = JSON.parse(pm.globals.get('users'))",
+							"const expectedID = JSON.parse(pm.globals.get('nextExpectedID'))",
 							"const addedUser = JSON.parse(request.data)",
-							"",
-							"const expectedNewId = 103;",
 							"",
 							"",
 							"// const addedUser",
 							"",
-							"tests[\"Status code is 200\"] = responseCode.code === 200;",
 							"",
-							"const user = res.find(user => user.id === expectedNewId);",
+							"console.log(res.length);",
+							"console.log(users.length);",
+							"const user = _.differenceBy(res, users, 'id')[0];",
+							"// const user = res.find(user => user.id === 101)",
 							"",
-							"pm.test('id is not a repeate', () => {",
-							"    remainingUser = users.filter(item => item.id === expectedNewId);",
-							"    pm.expect(remainingUser).to.have.length(1)",
-							"})",
+							"console.log(user)",
 							"",
-							"pm.test('user has the correct ID', () => {",
-							"    pm.expect(user.id).to.equal(expectedNewId)",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test('Id is based of counter, not previous id', () => {",
+							"    pm.expect(user.id).to.equal(expectedID)",
 							"})",
 							"",
 							"pm.test('the returned user has the correct info', () => {",
 							"    delete user.id;",
-							"    let matching = true;",
-							"    for(let key of res) {",
-							"        if (res[key] !== addedUser[key]) {",
-							"            matching = false;",
-							"        }",
-							"    }",
-							"    pm.expect(matching).to.equal(true)",
-							"})"
+							"    pm.expect(_.isEqual(user, addedUser)).to.equal(true)",
+							"})",
+							"",
+							"",
+							"pm.globals.set('nextExpectedID', expectedID + 1)",
+							"pm.globals.set('users', responseBody)"
 						],
 						"type": "text/javascript"
 					}
